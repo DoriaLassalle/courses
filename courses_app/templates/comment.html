@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %} Comments {% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Comentarios -->
+    <h2 class="text-center my-3">{{courseName}}</h2>
+    <p class="text-center mb-4"><strong>Description: </strong>{{desc}}</p>
+
+    <div class="row">
+        <div class="col-8 mx-auto">
+            {% for comment in allComments %}
+                <h5>{{comment.user}}</h5>
+                <p class="fst-italic"><strong>"{{comment.comment}}"</strong></p>
+                <p>{{comment.created_at}}</p>
+                <hr>
+            {% endfor %}            
+        </div>
+    </div>
+   
+    <!-- Formulario para comentar  -->
+    <div class="row p-4 mb-4">
+        <div class="col-6 mx-auto p-3 shad">
+            <form action="/courses/make_comment/{{id}}" method="POST">
+                <h4 class="mb-2">Add a new comment To this course</h4>
+                {% csrf_token %}
+                <div class="mb-3 row g-3 align-items-center">
+                    <div class="col-3">
+                        <label for="user" class="col-form-label">Your User Name:</label>
+                    </div>
+                    <div class="col-9">
+                        <input type="text" class="form-control" id="user" name="user" required>         
+                    </div>
+                </div>       
+                
+                <div class="mb-3 row g-3 align-items-center">
+                    <div class="col-3">
+                        <label for="comment" class="col-form-label">Your comment:</label>
+                    </div>
+                    <div class="col-9">
+                        <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
+                    </div>
+                </div> 
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="submit" class="btn btn-success">Add</button>
+                </div>            
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
