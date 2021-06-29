@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Course, Description, Comment
 from django.contrib import messages
+from django.http import JsonResponse
 
 # Create your views here.
 def index(request):    
@@ -12,22 +13,23 @@ def index(request):
 
 
 def addCourse(request): 
-    """     errorsFromModel=Course.objects.course_validator(request.POST)
-        if len(errorsFromModel)>0:
-            for key, value in errorsFromModel.items():
-                messages.error(request,value)
+    errorsFromModel=Course.objects.course_validator(request.POST)    
+   
+    if len(errorsFromModel)>0:
+        for key, value in errorsFromModel.items():
+            messages.error(request,value)
 
-            return redirect("/")
-        else: """
-    description=request.POST["description"] 
-    Description.objects.create(description=description) #primero creo la instacia de description
-    descr=Description.objects.last()#obtengo la que se acaba de crear
-    
-    courseName=request.POST["courseName"]
-    Course.objects.create(course_name=courseName, description=descr)#le paso la instancia de description recien creada
-    messages.success(request, f"Thanks! {courseName} has been added.")
+        return redirect("/")
+    else:
+        description=request.POST["description"] 
+        Description.objects.create(description=description) #primero creo la instacia de description
+        descr=Description.objects.last()#obtengo la que se acaba de crear
+        
+        courseName=request.POST["courseName"]
+        Course.objects.create(course_name=courseName, description=descr)#le paso la instancia de description recien creada
+        messages.success(request, f"Thanks! {courseName} has been added.")
 
-    return redirect("/")
+        return redirect("/")
 
 
 def destroyCourse(request, id):
@@ -48,8 +50,9 @@ def deleteCourse(request, id):
     courseToDelete=Course.objects.get(id=id)
     courseToDelete.delete()
     messages.success(request, f"{courseToDelete.course_name} has been deleted :(")
-
-    return redirect("/")
+   
+    """  return redirect("/") """
+    return JsonResponse({})# y de aqui que?
 
 
 def commentForm(request, id):
@@ -74,3 +77,6 @@ def makeComment(request,id):
     messages.success(request, "Your comment has been created")
 
     return redirect(f"/courses/comment/{id}")
+
+
+

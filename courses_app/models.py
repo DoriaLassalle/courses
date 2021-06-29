@@ -1,4 +1,5 @@
 from django.db import models
+import re
 
 # Create your models here.
 
@@ -6,11 +7,15 @@ class CourseManager(models.Manager):
     def course_validator(self, data):
         errors={}
 
-        if len(data["course_name"]) < 5:
+        if len(data["courseName"]) < 5:
             errors["courseName"]="Course name should be at least 5 characters"
         
         if len(data["description"]) < 15:
             errors["desc"]="Description should be at least 15 characters"
+        
+        SOLO_LETRAS_REGEX= re.compile(r'^[a-zA-Z ]+$') #incluye espacios
+        if not SOLO_LETRAS_REGEX.match(data["description"]):
+            errors["descrType"]="Description must have only letters"
     
         return errors
 

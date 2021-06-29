@@ -5,7 +5,7 @@
 <div class="container">
     <!-- Formulario add course -->
     <div class="row p-4 ">
-        <form action="/add" method="POST" class="col-6">
+        <form id="formAdd" action="/add" method="POST" class="col-6">
             <h3 class="mb-2">Add a new course</h3>
             {% csrf_token %}
             <div class="mb-3 row g-3 align-items-center">
@@ -13,7 +13,7 @@
                     <label for="courseName" class="col-form-label">Name:</label>
                 </div>
                 <div class="col-10">
-                    <input type="text" class="form-control" id="courseName" name="courseName" required>         
+                    <input type="text" class="form-control" id="courseName" name="courseName" required>                          
                 </div>
             </div>       
             
@@ -22,11 +22,15 @@
                     <label for="description" class="col-form-label">Description:</label>
                 </div>
                 <div class="col-10">
-                    <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                    <textarea  class="form-control" id="description" name="description" rows="3" required></textarea>
+                    <div id="errorDescription" class="text-danger fs-9" style="display: none">
+                        <p>Description should be at least 15 characters</p>
+                    </div> <!-- Este div lo agrego para mostrar el error en el fomrulario, opcion 2 fijo, la opcion 1 dinamica esta en el script  -->
                 </div>
             </div> 
+
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button type="submit" class="btn btn-primary">Add</button>
+                <button id="btnAdd" type="submit" class="btn btn-primary">Add</button>
             </div>            
         </form>
     </div>
@@ -50,14 +54,80 @@
                         <td>{{course.description.description}}</td>
                         <td>{{course.created_at}}</td>
                         <td>
-                            <a href="/courses/destroy/{{course.id}}">Remove</a>
-                            <a href="/courses/comment/{{course.id}}">Comment</a>
-                        </td>
-                    </tr>
+                            <!-- <a href="/courses/destroy/{{course.id}}" class="text-decoration-none"<i class="fas fa-eraser"></i>&nbsp;</a> -- remove -->
+                            <a class="delete-button btn-outline-danger text-decoration-none" data-id="{{course.id}}" data-cName="{{course.course_name}}" data-bs-toggle="modal" data-bs-target="#modal"><i class="fas fa-eraser"></i>&nbsp;</a><!-- remove con ajax -->
+                            
+                            <a href="/courses/comment/{{course.id}}" class="btn-outline-primary text-decoration-none" type="button" role="button">&nbsp;<i class="far fa-comment"></i></a><!-- comment -->
+                        </td>                        
+                    </tr>                    
                 {% endfor %}
             </tbody>
         </table>
+    </div>  
+
+    <!-- Modal -->
+    <div id="modal" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">You will Remove this Course Permanently</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <span id="curso"> </span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >No, Don´t Remove</button>
+                    <button id="btnDeleteFromModal" type="button" class="btn btn-danger">Yes! Remove it</button>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+
+    </div>
+
+    <script>
+
+        let id;
+        /* Capturo los valores del curso a borrar desde el boton que lanza el modal */
+        $(".delete-button").on("click", function(){
+            id= $(this).attr("data-id");
+            const courseName=$(this).attr("data-cName"); /* traigo los valores del curso via los atributos data  */
+            $("#curso").html(courseName); /* muestro el nombre del curso en el span con id curso del modal */
+
+        })
+
+        /* ir a borrar el curso con AJAX */
+        $("#btnDeleteFromModal").on("click", function(){   /* capturo el click del boton que confirma el borrado */
+
+            /* envio la solictud a Ajax */
+            $.ajax({
+                method: "POST",
+                url: "courses/delete/"+id+"",
+                data:{
+                    idToDelete:id,
+                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+
+                    success:function(resp){
+                        toastr.success("Curso borrado");
+                    }
+
+                }  
+                
+                         
+
+            })
+           
+            
+
+             
+          
+
+
+
+        })
+
+    </script>
+
 
 {% endblock %}

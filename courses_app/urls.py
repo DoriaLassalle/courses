@@ -8,5 +8,6 @@ urlpatterns = [
     path("courses/delete/<id>", views.deleteCourse),
     path("back", views.index),
     path("courses/comment/<id>", views.commentForm),
-    path("courses/make_comment/<id>", views.makeComment)
+    path("courses/make_comment/<id>", views.makeComment),
+   
 ]
