@@ -4,7 +4,8 @@ from django.contrib import messages
 from django.http import JsonResponse
 
 # Create your views here.
-def index(request):    
+def index(request):   
+     
     context={
         "allcourses":Course.objects.all()
     }  
@@ -52,7 +53,7 @@ def deleteCourse(request, id):
     messages.success(request, f"{courseToDelete.course_name} has been deleted :(")
    
     """  return redirect("/") """
-    return JsonResponse({})# y de aqui que?
+    return JsonResponse({"accion":"borrado"})
 
 
 def commentForm(request, id):

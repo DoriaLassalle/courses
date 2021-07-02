@@ -106,28 +106,18 @@
                 url: "courses/delete/"+id+"",
                 data:{
                     idToDelete:id,
-                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
-
-                    success:function(resp){
+                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),                    
+                }, 
+                success:function(resp){
                         toastr.success("Curso borrado");
-                    }
-
-                }  
-                
-                         
-
-            })
-           
-            
-
+                }                
+                            
+             })      
              
-          
-
-
-
+            $("#modal").modal("hide");
+                   
         })
 
     </script>
-
 
 {% endblock %}

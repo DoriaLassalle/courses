@@ -33,13 +33,13 @@ class Description(models.Model):
 class Course(models.Model):
     course_name=models.CharField(max_length=255)
     description=models.ForeignKey(Description, related_name="course", on_delete=models.CASCADE)
-    created_at=models.DateField(auto_now_add=True)
+    created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
     #comments
     objects=CourseManager() #vinculando el validador a la clase
 
     def __repr__(self):
-        return f"Curso: {self.course.name}"
+        return f"Curso: {self.course_name}"
 
 
 class Comment(models.Model):
