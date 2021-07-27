@@ -52,7 +52,14 @@ def deleteCourse(request, id):
     courseToDelete.delete()
     messages.success(request, f"{courseToDelete.course_name} has been deleted :(")
    
-    """  return redirect("/") """
+    return redirect("/")
+    
+
+
+def deleteAjax(request, id):
+    courseToDelete=Course.objects.get(id=id)
+    courseToDelete.delete()     
+    
     return JsonResponse({"accion":"borrado"})
 
 

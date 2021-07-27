@@ -9,5 +9,6 @@ urlpatterns = [
     path("back", views.index),
     path("courses/comment/<id>", views.commentForm),
     path("courses/make_comment/<id>", views.makeComment),
+    path('deleteAjax/<id>', views.deleteAjax)
    
 ]
